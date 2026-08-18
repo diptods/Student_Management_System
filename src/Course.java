@@ -1,5 +1,3 @@
-import java.lang.classfile.Instruction;
-
 public class Course {
     private final String courseId;
     private String title;

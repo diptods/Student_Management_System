@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.*;
 
 public class StudentManagementSystem {
@@ -152,12 +154,68 @@ public class StudentManagementSystem {
         return totalCredits == 0 ? 0 : totalPoints / totalCredits;
     }
 
-    public void saveData() {
+    public synchronized void saveData() {
         dataManager.saveDepartments(departments);
         dataManager.saveStudents(students);
         dataManager.saveInstructors(instructors);
         dataManager.saveCourses(courses);
         dataManager.saveEnrollments(enrollments);
+    }
+
+    public void exportTranscriptsAsync() {
+        Thread exportThread = new Thread(() -> {
+            Path exportDir = Paths.get("exports");
+            try {
+                Files.createDirectories(exportDir);
+                System.out.println("\n[Export Thread] Starting transcript export in background...");
+
+                List<Student> studentList;
+                synchronized (this) {
+                    studentList = new ArrayList<>(this.students);
+                }
+
+                if (studentList.isEmpty()) {
+                    System.out.println("[Export Thread] No students to export.");
+                    return;
+                }
+
+                for (Student s : studentList) {
+                    Path filePath = exportDir.resolve(s.getId() + "_transcript.txt");
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("==================================================\n");
+                    sb.append("                 STUDENT TRANSCRIPT\n");
+                    sb.append("==================================================\n");
+                    sb.append("ID: ").append(s.getId()).append("\n");
+                    sb.append("Name: ").append(s.getName()).append("\n");
+                    sb.append("Department: ").append(s.getDepartment() == null ? "N/A" : s.getDepartment().getName()).append("\n");
+                    sb.append("Semester: ").append(s.getSemester()).append("\n");
+                    sb.append("--------------------------------------------------\n");
+
+                    List<Enrollment> records = getStudentEnrollments(s.getId());
+                    if (records.isEmpty()) {
+                        sb.append("No courses enrolled.\n");
+                    } else {
+                        for (Enrollment e : records) {
+                            sb.append(e.toString()).append("\n");
+                        }
+                    }
+                    sb.append(String.format("GPA: %.2f%n", calculateGPA(s.getId())));
+                    sb.append("==================================================\n");
+
+                    Files.writeString(filePath, sb.toString());
+                    Thread.sleep(400); // Simulate background work
+                }
+
+                System.out.printf("%n[Export Thread] Successfully exported %d transcript(s) to '%s/' folder!%nChoose an option: ",
+                        studentList.size(), exportDir.getFileName());
+            } catch (IOException e) {
+                System.out.println("\n[Export Thread] File error during export: " + e.getMessage());
+            } catch (InterruptedException e) {
+                System.out.println("\n[Export Thread] Export operation was interrupted.");
+            }
+        }, "TranscriptExporter-Thread");
+
+        exportThread.start();
     }
 
     private void loadData() {

@@ -10,6 +10,12 @@ public class Main {
         System.out.println("       STUDENT MANAGEMENT SYSTEM - JAVA OOP");
         System.out.println("==================================================");
 
+        // Start background Auto-Save Daemon Thread (runs every 30 seconds)
+        AutoSaveTask autoSaveTask = new AutoSaveTask(system, 30);
+        Thread autoSaveThread = new Thread(autoSaveTask, "AutoSave-Daemon-Thread");
+        autoSaveThread.setDaemon(true);
+        autoSaveThread.start();
+
         while (true) {
             printMenu();
             String choice = sc.nextLine().trim();
@@ -35,6 +41,7 @@ public class Main {
                         system.saveData();
                         System.out.println("All data saved successfully.");
                     }
+                    case "17" -> system.exportTranscriptsAsync();
                     case "0" -> {
                         system.saveData();
                         System.out.println("Data saved. Program closed. Thanks");
@@ -59,6 +66,7 @@ public class Main {
         System.out.println("11. Add Course           12. View Courses");
         System.out.println("13. Record Marks         14. View Transcript");
         System.out.println("15. View Enrollments     16. Save Data");
+        System.out.println("17. Export Transcripts (Async Thread)");
         System.out.println(" 0. Save & Exit");
         System.out.print("Choose an option: ");
     }
