@@ -1,0 +1,6 @@
+dept001|CSE
+dept002|DSA
+dept003|EEE
+dept004|Civil
+dept005|BBA
+dept006|LLB
