@@ -2,10 +2,15 @@
 out/
 .idea/
 exports/
+.history/
+!docs/PROJECT_REPORTmdmd
+!docs/PROJECT_REPORT.md
 *.class
 !**/src/main/**/out/
 !**/src/test/**/out/
 .kotlin
+
+PROJECT_REPORT.md 
 
 ### Eclipse ###
 .apt_generated
