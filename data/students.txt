@@ -1,3 +1,0 @@
-std001|Alex|+012345|alex@gmail.com|dept001|1
-std002|Charlie|+023456|charlie@gmail.com|dept003|3
-std003|Tom|+987654|tom@gmail.com|dept001|3

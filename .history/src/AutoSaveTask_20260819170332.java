@@ -20,7 +20,7 @@ public class AutoSaveTask implements Runnable {
     public void run() {
         while (running) {
             try {
-                Thread.sleep(intervalSeconds * 3000L);
+                Thread.sleep(intervalSeconds * 6000L);
                 if (running) {
                     system.saveData();
                     String time = LocalTime.now().format(TIME_FORMATTER);
