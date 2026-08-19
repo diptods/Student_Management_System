@@ -3,6 +3,8 @@ out/
 .idea/
 exports/
 .history/
+.history
+
 !docs/PROJECT_REPORTmdmd
 !docs/PROJECT_REPORT.md
 *.class
